@@ -51,6 +51,8 @@ namespace DataAccess.Concrete.InMemory
             throw new NotImplementedException();
         }
 
+        
+
         public void Update(Contact contact)
         {
             Contact contactToUpdate = _contacts.SingleOrDefault(p => p.ContactId == contact.ContactId);

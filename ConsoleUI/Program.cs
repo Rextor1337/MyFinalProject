@@ -11,12 +11,20 @@ namespace ConsoleUI
         {
             ContactManager contactManager = new ContactManager(new EfContactDal());
 
-            
-            foreach (var contact in contactManager.GetAll())
-            {
-                Console.WriteLine(contact.ContactNick);
-                Console.WriteLine(contact.ContactName);
+            var result = contactManager.GetAll();
 
+            if (result.Success == true)
+            {
+                foreach (var contact in result.Data)
+                {
+                    Console.WriteLine(contact.ContactNick + "/" + contact.ContactName);
+
+                }
+                
+            }
+            else
+            {
+                Console.WriteLine(result.Message);
             }
 
 

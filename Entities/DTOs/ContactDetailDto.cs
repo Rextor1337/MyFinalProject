@@ -1,11 +1,12 @@
-﻿using Core.Entities;
+﻿using Core;
+using Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Entities.Concrete
+namespace Entities.DTOs
 {
-    public  class Contact:IEntity
+    public class ContactDetailDto:IDto
     {
         public int ContactId { get; set; }
         public string ContactNick { get; set; }
@@ -17,6 +18,5 @@ namespace Entities.Concrete
         public string ContactRelation { get; set; }
         public string ContactAddress { get; set; }
         public string ContactAdditionalNotes { get; set; }
-
     }
 }
