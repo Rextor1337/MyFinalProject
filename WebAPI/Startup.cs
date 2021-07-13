@@ -30,8 +30,8 @@ namespace WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSingleton<IContactService,ContactManager>();
-            services.AddSingleton<IContactDal, EfContactDal>();
+            //services.AddSingleton<IContactService,ContactManager>();
+            //services.AddSingleton<IContactDal, EfContactDal>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
