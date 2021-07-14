@@ -1,8 +1,12 @@
 ﻿using Business.Abstarct;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,17 +21,15 @@ namespace Business.Concrete
         {
             _contactDal = contactDal;
         }
-        
-           
 
+
+        [ValidationAspect(typeof(ContactValidator))]
         public IResult Add(Contact contact)
         {
-            _contactDal.Add(contact);
+           
 
-            if (contact.ContactNick.Length<2)
-            {
-                return new ErrorResult(Messages.ContactNickInvalid);
-            }
+
+            _contactDal.Add(contact);
 
 
             return new SuccessResult(Messages.ContactAdded);
@@ -35,16 +37,16 @@ namespace Business.Concrete
 
         public IDataResult<List<Contact>> GetAll()
         {
-            
+
 
             {
-                return new SuccessDataResult<List<Contact>>(_contactDal.GelAll(),Messages.ContactListed);
+                return new SuccessDataResult<List<Contact>>(_contactDal.GelAll(), Messages.ContactListed);
             }
         }
 
         public IDataResult<Contact> GetById(int contactId)
         {
-            return new SuccessDataResult<Contact>( _contactDal.Get(p=>p.ContactId == contactId));
+            return new SuccessDataResult<Contact>(_contactDal.Get(p => p.ContactId == contactId));
         }
 
         IDataResult<List<Contact>> IContactService.GetById(int contactId)
