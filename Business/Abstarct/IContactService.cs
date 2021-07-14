@@ -15,5 +15,8 @@ namespace Business.Abstarct
 
         IResult Add(Contact contact);
 
+        IResult Update(Contact contact);
+
+
     }
 }

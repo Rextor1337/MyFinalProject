@@ -1,14 +1,17 @@
 ﻿using Business.Abstarct;
+using Business.CCS;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Business.Concrete
@@ -20,19 +23,26 @@ namespace Business.Concrete
         public ContactManager(IContactDal contactDal)
         {
             _contactDal = contactDal;
+
         }
 
 
         [ValidationAspect(typeof(ContactValidator))]
         public IResult Add(Contact contact)
         {
-           
-
-
+            IResult result = BusinessRules.Run(CheckIfContactNickExists(contact.ContactNick),
+                CheckIfContactCountOfContactCorrect(contact.ContactId));
+            if (result != null)
+            {
+                return result;
+            }
             _contactDal.Add(contact);
 
-
             return new SuccessResult(Messages.ContactAdded);
+
+
+            
+
         }
 
         public IDataResult<List<Contact>> GetAll()
@@ -49,9 +59,45 @@ namespace Business.Concrete
             return new SuccessDataResult<Contact>(_contactDal.Get(p => p.ContactId == contactId));
         }
 
+        public IResult Update(Contact contact)
+        {
+            var result = _contactDal.GelAll(p => p.ContactId == contact.ContactId).Count;
+
+            if (result >= 15)
+            {
+                return new ErrorResult(Messages.ContactCountOfContactError);
+            }
+            throw new NotImplementedException();
+        }
+
         IDataResult<List<Contact>> IContactService.GetById(int contactId)
         {
             throw new NotImplementedException();
         }
+
+        private IResult CheckIfContactCountOfContactCorrect(int contactId)
+        {
+            var result = _contactDal.GelAll(p => p.ContactId == contactId).Count;
+
+            if (result >= 15)
+            {
+                return new ErrorResult(Messages.ContactCountOfContactError);
+            }
+            return new SuccessResult();
+        }
+
+        private IResult CheckIfContactNickExists(string contactNick)
+        {
+            var result = _contactDal.GelAll(p => p.ContactNick == contactNick).Any();
+
+            if (result)
+            {
+                return new ErrorResult(Messages.ContactNickAlreadyExists);
+            }
+            return new SuccessResult();
+        }
+
     }
+
 }
+
