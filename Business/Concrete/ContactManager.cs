@@ -1,4 +1,5 @@
 ﻿using Business.Abstarct;
+using Business.BusinessAspects.AutoFac;
 using Business.CCS;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
@@ -26,7 +27,7 @@ namespace Business.Concrete
 
         }
 
-
+        [SecuredOperation("contact.add")]
         [ValidationAspect(typeof(ContactValidator))]
         public IResult Add(Contact contact)
         {
