@@ -3,6 +3,7 @@ using Business.BusinessAspects.AutoFac;
 using Business.CCS;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Business;
@@ -26,9 +27,12 @@ namespace Business.Concrete
             _contactDal = contactDal;
 
         }
-
-        [SecuredOperation("contact.add")]
+        
+        [SecuredOperation(" contact.add , admin ")]
         [ValidationAspect(typeof(ContactValidator))]
+        [CacheRemoveAspect("IContactService.Get")]
+
+
         public IResult Add(Contact contact)
         {
             IResult result = BusinessRules.Run(CheckIfContactNickExists(contact.ContactNick),
@@ -46,6 +50,8 @@ namespace Business.Concrete
 
         }
 
+        [CacheAspect]
+
         public IDataResult<List<Contact>> GetAll()
         {
 
@@ -60,6 +66,9 @@ namespace Business.Concrete
             return new SuccessDataResult<Contact>(_contactDal.Get(p => p.ContactId == contactId));
         }
 
+        [ValidationAspect(typeof(ContactValidator))]
+        [CacheRemoveAspect("IContactService.Get")]
+
         public IResult Update(Contact contact)
         {
             var result = _contactDal.GelAll(p => p.ContactId == contact.ContactId).Count;
@@ -70,6 +79,8 @@ namespace Business.Concrete
             }
             throw new NotImplementedException();
         }
+
+        [CacheAspect]
 
         IDataResult<List<Contact>> IContactService.GetById(int contactId)
         {
@@ -97,7 +108,16 @@ namespace Business.Concrete
             }
             return new SuccessResult();
         }
+        
+        
 
+        public IResult AddTransactionalTest(Contact contact)
+        {
+            throw new NotImplementedException();
+        }
+
+        
+        
     }
 
 }
