@@ -28,7 +28,7 @@ namespace Business.Concrete
 
         }
         
-        [SecuredOperation(" contact.add , admin ")]
+        //[SecuredOperation(" contact.add , admin ")]
         [ValidationAspect(typeof(ContactValidator))]
         [CacheRemoveAspect("IContactService.Get")]
 
@@ -71,13 +71,12 @@ namespace Business.Concrete
 
         public IResult Update(Contact contact)
         {
-            var result = _contactDal.GelAll(p => p.ContactId == contact.ContactId).Count;
-
-            if (result >= 15)
-            {
-                return new ErrorResult(Messages.ContactCountOfContactError);
-            }
-            throw new NotImplementedException();
+            var updatedContact = new Contact();
+            updatedContact = _contactDal.Get(c => c.ContactId == contact.ContactId);
+            updatedContact = contact;
+            _contactDal.Update(updatedContact);
+            return new SuccessResult();
+            
         }
 
         [CacheAspect]
@@ -115,9 +114,17 @@ namespace Business.Concrete
         {
             throw new NotImplementedException();
         }
+        [CacheRemoveAspect("IContactService.Get")]
+        public IResult Delete(Contact contact)
+        {
+            var deletedPerson = new Contact();
+            deletedPerson = _contactDal.Get(c => c.ContactId == contact.ContactId);
+            _contactDal.Delete(deletedPerson);
+            return new SuccessResult();
+        }
+        
 
-        
-        
+
     }
 
 }

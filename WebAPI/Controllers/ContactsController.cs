@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace WebAPI.Controllers
@@ -26,6 +27,8 @@ namespace WebAPI.Controllers
 
         public IActionResult GetAll()
         {
+
+            Thread.Sleep(500);
             
             
                 var result = _contactService.GetAll();
@@ -61,7 +64,27 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result);
         }
-            
+
+        [HttpPost("update")]
+        public IActionResult Update(Contact contact)
+        {
+            var result = _contactService.Update(contact);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [HttpPost("delete")]
+        public IActionResult Delete(Contact contact)
+        {
+            var result = _contactService.Delete(contact);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
 
     }
 }

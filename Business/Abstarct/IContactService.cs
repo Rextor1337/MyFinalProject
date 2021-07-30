@@ -19,6 +19,7 @@ namespace Business.Abstarct
 
         IResult AddTransactionalTest(Contact contact);
 
+        IResult Delete(Contact contact);
 
     }
 }

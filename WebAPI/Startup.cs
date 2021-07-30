@@ -40,6 +40,8 @@ namespace WebAPI
             services.AddControllers();
             //services.AddSingleton<IContactService,ContactManager>();
             //services.AddSingleton<IContactDal, EfContactDal>();
+            services.AddCors();
+
             var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
             //yeni
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -70,6 +72,8 @@ namespace WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(builder=>builder.WithOrigins("http://localhost:4200").AllowAnyHeader());
 
             app.UseHttpsRedirection();
 
